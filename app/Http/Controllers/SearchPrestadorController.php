@@ -102,13 +102,11 @@ class SearchPrestadorController extends Controller
         $prestadoresIds = $prestadores->pluck('id')->toArray();
         $statusArray = $this->statusController->generateRandomStatus($prestadoresIds);
 
-        // Criar um mapa de status por idPrestador para fácil acesso
         $statusMap = [];
         foreach ($statusArray as $status) {
             $statusMap[$status['idPrestador']] = $status['status'];
         }
 
-        // Adicionar status aos prestadores correspondentes
         foreach ($prestadores as &$prestador) {
             $idPrestador = $prestador->id;
             if (isset($statusMap[$idPrestador])) {

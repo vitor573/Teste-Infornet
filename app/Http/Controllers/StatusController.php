@@ -35,33 +35,23 @@ class StatusController extends Controller
     }
 
     function generateRandomStatus($prestadoresIds)
-{
-    $prestadores = [];
-    for ($i = 1; $i <= 25; $i++) {
-        $status = rand(0, 1) ? 'Online' : 'Offline';
-        $prestadores[] = [
-            'idPrestador' => $i,
-            'status' => $status
-        ];
+    {
+        $prestadores = [];
+        for ($i = 1; $i <= 25; $i++) {
+            $status = rand(0, 1) ? 'Online' : 'Offline';
+            $prestadores[] = [
+                'idPrestador' => $i,
+                'status' => $status
+            ];
+        }
+
+        $prestadoresIdsGenerated = array_column($prestadores, 'idPrestador');
+        $matchingPrestadoresIds = array_intersect($prestadoresIdsGenerated, $prestadoresIds);
+
+        $matchingPrestadores = array_filter($prestadores, function ($prestador) use ($matchingPrestadoresIds) {
+            return in_array($prestador['idPrestador'], $matchingPrestadoresIds);
+        });
+
+        return array_values($matchingPrestadores);
     }
-
-    // Extrair IDs de $prestadores
-    $prestadoresIdsGenerated = array_column($prestadores, 'idPrestador');
-
-    // Encontrar IDs de prestadores gerados que estão presentes em $prestadoresIds
-    $matchingPrestadoresIds = array_intersect($prestadoresIdsGenerated, $prestadoresIds);
-
-    // Filtrar $prestadores para incluir apenas aqueles com IDs correspondentes
-    $matchingPrestadores = array_filter($prestadores, function ($prestador) use ($matchingPrestadoresIds) {
-        return in_array($prestador['idPrestador'], $matchingPrestadoresIds);
-    });
-
-    // Retornar os prestadores correspondentes
-    return array_values($matchingPrestadores);
-}
-
-
-
-
-
 }
